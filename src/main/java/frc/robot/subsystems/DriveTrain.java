@@ -68,7 +68,7 @@ private final DifferentialDriveOdometry m_Odometry;
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-      setDefaultCommand(RobotContainer.manualDrive); 
+      setDefaultCommand(RobotContainer.manualDrive); //Not the right place for this... Put it in RobotContainer
       m_Odometry.update(pigeon.getRotation2d(),
        ticksToMeters(leftDriveMotorMaster.getSelectedSensorPosition()),
        ticksToMeters(rightDriveMotorMaster.getSelectedSensorPosition()));

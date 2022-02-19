@@ -5,17 +5,12 @@
 package frc.robot;
 
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.ManualDrive;
@@ -59,39 +54,47 @@ public class RobotContainer {
   public static PowerDistribution pdh;
   public static PneumaticHub pneumaticHub;
 
-  //Auto Plays
-  public static TestAuto testAuto;
+ 
+  
+
+  
  
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    shooter = new Shooter();
-    startShooter = new StartShooter(shooter);
+    //Robot SubSystems
+      driveTrain = new DriveTrain();
+      shooter = new Shooter();
+      climber = new Climber();
+      intake = new Intake();
+      vision = new Vision();
+     
+    //Controlers
+      driverController = new XboxController(Constants.driver_controller_port);
+      opereratorController = new XboxController(Constants.operator_controller_port);
 
-    climber = new Climber();
+    // Commands I dont think we need these instances if when we call the button press and other things we create a new instance of the command anyways
+      //runIntake = new RunIntake(intake);
+      //startShooter = new StartShooter(shooter);
+      //visionTracking = new VisionTracking(vision, driveTrain);
+      manualDrive = new ManualDrive(driveTrain);   
 
-    driveTrain = new DriveTrain();
-    doNothing = new DoNothing(driveTrain);
-    manualDrive = new ManualDrive(driveTrain);
+    // AutoCommands  - See commands comment
+      // doNothing = new DoNothing(driveTrain);
 
-    intake = new Intake();
-    runIntake = new RunIntake(intake);
+    //Set Subsystem Default Commands here
+      //driveTrain.setDefaultCommand(manualDrive);
+   
+    //Create instances of RobotHardware
+      pdh = new PowerDistribution(Constants.pdh_port,ModuleType.kRev);
+      pneumaticHub = new PneumaticHub(Constants.pneumatic_hub_port);
 
-    vision = new Vision();
-    visionTracking = new VisionTracking(vision, driveTrain);
-
-    driverController = new XboxController(Constants.driver_controller_port);
-    opereratorController = new XboxController(Constants.operator_controller_port);
+    // Sendable Chooser here for autoplay Set default option ot DoNothing and add options for all other Auto Plays
+        //Each option you add is a new instance of the autoCommands (therfore you dont need to create them above as we had before)
     
-    pdh = new PowerDistribution(Constants.pdh_port,ModuleType.kRev);
-    pneumaticHub = new PneumaticHub(Constants.pneumatic_hub_port);
-
-    //Auto Plays
     
-      testAuto = new TestAuto(driveTrain, Robot.testTrajectory);
-
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -104,8 +107,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    JoystickButton shootButton = new JoystickButton(opereratorController, Constants.xButton);
-    shootButton.whileHeld(new StartShooter(shooter));
+    //JoystickButton shootButton = new JoystickButton(opereratorController, Constants.xButton);
+    //shootButton.whileHeld(new StartShooter(shooter));
 
     /*JoystickButton intakeButton = new JoystickButton(opereratorController, Constants.yButton);
     intakeButton.whenPressed(new RunIntake(intake));
@@ -122,13 +125,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    driveTrain.resetOdemetry(Robot.testTrajectory.getInitialPose());
+    // Return the getSendableChooser // This will send the autoCommand Selected in the SmartDashboard
+
+     // Get rid of this and add to the FollowPathAndIntake Command Goup
+
+     driveTrain.resetOdemetry(Robot.testTrajectory.getInitialPose());
     
-    return testAuto;
-
-    // An ExampleCommand will run in autonomous
-    //return doNothing;
-
+    return new TestAuto(driveTrain, Robot.testTrajectory, intake);// Remove this line of code in the end.
 
   }
 }

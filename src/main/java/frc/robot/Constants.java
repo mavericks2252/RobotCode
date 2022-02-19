@@ -17,12 +17,20 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
 
 
-//Motor Ports
-
+    /*  Consider Using Classes for Constants of each Subsystem to limit the imports of constants
+    public final class DriveConstants{ 
+        Put DriveTrain Constants here
+    }
+    public final class ShooterConstants{}
+    public final class IntakeConstants{}
+    public final class VisionConstnats{}
+    public final class TurretConstants{}
+    public final class XboxConstants{}
+    */
     //Drive Base 
     
     public static final int left_motor_slave_port = 1;
-    public static final int left_motor_master_port = 0;
+    public static final int left_motor_master_port = 4;
     public static final int right_motor_slave_port = 3;
     public static final int right_motor_master_port = 2;
     public static final int pigeon_port=12;
@@ -35,7 +43,7 @@ public final class Constants {
     public static final double shooter_target_RPMs = 2700;
 
     //Climber
-   public static final int climber_motor_port = 4;
+   public static final int climber_motor_port = 10;
     
     //Intake
     public static final int intake_motor_port = 8;
@@ -96,8 +104,8 @@ public final class Constants {
     public static final int right_bumper = 6;
 	
     //Pneumatics
-    public static final int pdh_port = 15;
-    public static final int pneumatic_hub_port = 16;
+    public static final int pdh_port = 1;
+    public static final int pneumatic_hub_port = 1;
     public static final int climber_solenoid_channel = 1;
     public static final int intake_solenoid_channel = 2;
     public static final int shooter_solenoid_channel = 3;

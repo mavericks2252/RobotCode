@@ -39,8 +39,9 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
-
+    
+    // Importing Trajectories form the deployed directory to a variable to use and follow with
+    // autonomous Commands
     try {
       Path testPath = Filesystem.getDeployDirectory().toPath().resolve(testJSON);
       testTrajectory = TrajectoryUtil.fromPathweaverJson(testPath);
@@ -55,7 +56,12 @@ public class Robot extends TimedRobot {
     } catch (IOException ex){
       DriverStation.reportError("Unable to open Trajectory: " + test2JSON, ex.getStackTrace());
     }
-
+    
+    //Create Robot Container after importing all Trajectories so that they are populated when
+    // importing into RobotContainer... If Created after RobotContainer you will pass in empty
+    // trajectories
+    
+    m_robotContainer = new RobotContainer();
   }
 
   /**

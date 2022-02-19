@@ -26,7 +26,9 @@ public class VisionTracking extends CommandBase {
   public VisionTracking(Vision v, DriveTrain dt) {
     vision = v;
     driveTrain = dt;
-  addRequirements(vision, driveTrain); //declare subsystem dependencies.
+  
+    // This is going to need to intake the Turret and not the drivetrain
+    addRequirements(vision, driveTrain); //declare subsystem dependencies.
   
 
   }

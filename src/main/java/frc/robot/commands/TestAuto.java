@@ -4,18 +4,14 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Intake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -23,33 +19,22 @@ import frc.robot.subsystems.DriveTrain;
 public class TestAuto extends SequentialCommandGroup {
   DriveTrain driveTrain;
   /** Creates a new TestAuto. */
-  public TestAuto(DriveTrain dT, Trajectory trajectory) {
+  public TestAuto(DriveTrain dT, Trajectory trajectory, Intake intake) {
     driveTrain = dT;
     
-    RamseteCommand ramseteCommand = new RamseteCommand (
-      trajectory, // trajectory
-      driveTrain::getPose2d, // Pose Supplier
-      new RamseteController(Constants.k_ramesete_b,Constants.k_ramesete_zeta),// object does path following conputation and converts to chassis speed
-      new SimpleMotorFeedforward(Constants.ks_volts, 
-                                 Constants.kv_volts_seconds_per_meter, 
-                                 Constants.ka_volts_seconds_squared_per_meter), 
-  
-      Constants.k_drive_kinematics, // accounts for wheel space 
-      driveTrain::getWheelSpeeds, // the wheel speed supplier to the controller
-      new PIDController(Constants.kp_drive_velocity,0, 0), // left side PID controller  
-      new PIDController(Constants.kp_drive_velocity, 0, 0),// right side PID controller  
-      driveTrain::tankDriveVolts,//passing output voltage to drivetrain  
-      driveTrain);
+   
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-
-      new ParallelRaceGroup(
+      
+    
+      new ParallelRaceGroup(    //  You can just use   race()  inplace of importing ParallelRaceGroup and creating a new command
         RobotContainer.startShooter, 
-        new WaitCommand(3)
-    ), 
+        new WaitCommand(3) 
+        
+      ), 
 
-      ramseteCommand
+      new FollowPathAndIntake(trajectory, driveTrain, intake)
       
     
       );

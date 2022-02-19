@@ -33,7 +33,6 @@ public class Vision extends SubsystemBase {
     ty = limeLightVerticalPosition();
    
     SmartDashboard.putNumber("Vision Target Found", tv);
-
     SmartDashboard.putNumber("Horizontal Position", tx);
     SmartDashboard.putNumber("Vertical Position", ty);
 
@@ -56,5 +55,9 @@ public class Vision extends SubsystemBase {
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
 
   }
+
+  // Calculate Distance Method See Me I can help with the Trig on this.
+
+  
 
 }

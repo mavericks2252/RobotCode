@@ -14,16 +14,20 @@ public class Hopper extends SubsystemBase {
 
   WPI_TalonFX hopperMotor;
   WPI_TalonFX feedWheel;
-  DigitalInput ballSensor;
+  DigitalInput ballSensor; // need to create a new instance of this sensor
 
 
 
 
   /** Creates a new Hopper. */
-  public Hopper() {
+  public Hopper() { //Rename BallRun
 
-    hopperMotor = new WPI_TalonFX(Constants.hopper_motor_port);
+    // Only need a Ballrun Motor
+    
+    hopperMotor = new WPI_TalonFX(Constants.hopper_motor_port); 
     feedWheel = new WPI_TalonFX(Constants.feed_wheel_motor_port);
+
+    // set ballSensor equal to new instance of a digital input
     
 
   }
@@ -32,4 +36,11 @@ public class Hopper extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
-}
+
+  //Method to set PercentOutput of Ballrun Motor
+
+  //Method to stop BallRun Motor
+
+  //Method to get ballSensor (return a boolean I think)
+
+  }
