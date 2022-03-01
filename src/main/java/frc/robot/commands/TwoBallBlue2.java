@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -17,28 +16,19 @@ import frc.robot.subsystems.Intake;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TestAuto extends SequentialCommandGroup {
-  
-  /** Creates a new TestAuto. */
-  public TestAuto(Trajectory trajectory, Trajectory trajectory2, DriveTrain driveTrain, Intake intake, BallRun ballRun) {
-    
+public class TwoBallBlue2 extends SequentialCommandGroup {
+  /** Creates a new TwoBallBlue2. */
+  public TwoBallBlue2(Trajectory path1, Trajectory path2, DriveTrain driveTrain, Intake intake, BallRun ballRun) {
     ParallelDeadlineGroup shootAndWait = new ParallelDeadlineGroup(new WaitCommand(3), new StartShooter(RobotContainer.shooter));
-    ParallelDeadlineGroup shootAndWait2 = new ParallelDeadlineGroup(new WaitCommand(3), new StartShooter(RobotContainer.shooter));
-   
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      
-      
-      shootAndWait,
 
-      new FollowPathAndIntake(trajectory, driveTrain, intake, ballRun), 
+    new FollowPathAndIntake(path1, driveTrain, intake, ballRun), 
 
-      shootAndWait2,
+    shootAndWait
 
-      new FollowPathAndIntake(trajectory2, driveTrain, intake, ballRun)
-      
-    
-      );
+    //new FollowPathAndIntake(path2, driveTrain, intake, ballRun)
+    );
   }
 }

@@ -6,14 +6,15 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -32,16 +33,16 @@ WPI_Pigeon2 pigeon;
 private final DifferentialDriveOdometry m_Odometry;
 
   public DriveTrain(){
-    
+    // Creates new left and right slave and master drivetrain motors
     rightDriveMotorMaster = new WPI_TalonFX(Constants.right_motor_master_port);
     rightDriveMotorSlave = new WPI_TalonFX(Constants.right_motor_slave_port);    
     leftDriveMotorMaster = new WPI_TalonFX(Constants.left_motor_master_port);
     leftDriveMotorSlave = new WPI_TalonFX(Constants.left_motor_slave_port);
-  
+    // Creates a new instance of differential drive
     drive = new DifferentialDrive(leftDriveMotorMaster, rightDriveMotorMaster);
     
     //Left Motors
-    
+      // Sets motor and encoder defaults
     leftDriveMotorMaster.setNeutralMode(NeutralMode.Brake);
     leftDriveMotorMaster.setInverted(true);
     leftDriveMotorSlave.setInverted(true);
@@ -49,7 +50,10 @@ private final DifferentialDriveOdometry m_Odometry;
     leftDriveMotorMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     leftDriveMotorMaster.setSelectedSensorPosition(0);
 
-  //Right Motors
+   
+
+   //Right Motors
+      // Sets motor and encoder defaults
     rightDriveMotorMaster.setNeutralMode(NeutralMode.Brake);
     rightDriveMotorMaster.setInverted(false);
     rightDriveMotorSlave.setInverted(false);
@@ -57,6 +61,17 @@ private final DifferentialDriveOdometry m_Odometry;
     rightDriveMotorMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     rightDriveMotorMaster.setSelectedSensorPosition(0);
     
+    //Current Limits
+    rightDriveMotorMaster.configSupplyCurrentLimit(Constants.drive_motor_current_limit);
+    rightDriveMotorSlave.configSupplyCurrentLimit(Constants.drive_motor_current_limit);
+    leftDriveMotorMaster.configSupplyCurrentLimit(Constants.drive_motor_current_limit);
+    leftDriveMotorSlave.configSupplyCurrentLimit(Constants.drive_motor_current_limit);
+    
+    rightDriveMotorMaster.configStatorCurrentLimit(Constants.drive_motor_stator_current_limit);
+    rightDriveMotorSlave.configStatorCurrentLimit(Constants.drive_motor_stator_current_limit);
+    leftDriveMotorMaster.configStatorCurrentLimit(Constants.drive_motor_stator_current_limit);
+    leftDriveMotorSlave.configStatorCurrentLimit(Constants.drive_motor_stator_current_limit);
+    // Creates new pigeon2 gyro
     pigeon = new WPI_Pigeon2(Constants.pigeon_port);
    
     m_Odometry = new DifferentialDriveOdometry(pigeon.getRotation2d());
@@ -72,11 +87,17 @@ private final DifferentialDriveOdometry m_Odometry;
       m_Odometry.update(pigeon.getRotation2d(),
        ticksToMeters(leftDriveMotorMaster.getSelectedSensorPosition()),
        ticksToMeters(rightDriveMotorMaster.getSelectedSensorPosition()));
+
+       SmartDashboard.putNumber("RightMasterAmps", RobotContainer.pdh.getCurrent(0));
+       SmartDashboard.putNumber("RightSlaveAmps", RobotContainer.pdh.getCurrent(1));
+       SmartDashboard.putNumber("LeftMasterAmps", RobotContainer.pdh.getCurrent(18));
+       SmartDashboard.putNumber("LeftSlaveAmps", RobotContainer.pdh.getCurrent(19));
   }
 
+  // Creates joystick deadband
   public double deadBand(int axis){
 
-    if(RobotContainer.driverController.getRawAxis(axis) == Constants.deadBand - -Constants.deadBand){
+    if(Math.abs(RobotContainer.driverController.getRawAxis(axis)) <= Constants.deadBand){
       return 0;
     }
     else{
@@ -84,6 +105,7 @@ private final DifferentialDriveOdometry m_Odometry;
     }
   }
 
+  // Creates arcade drive to manually drive the robot
   public void ManualDrive(XboxController controller, double speed){
 
     drive.arcadeDrive( -deadBand(Constants.lStickYAxis), deadBand(Constants.rStickXAxis));
@@ -111,6 +133,8 @@ private final DifferentialDriveOdometry m_Odometry;
   public void resetOdemetry(Pose2d pose) {
     resetEncoders();
     m_Odometry.resetPosition(pose, pigeon.getRotation2d());
+
+    SmartDashboard.putBoolean("pose reset", true);
     }
 
   public void resetEncoders(){

@@ -26,10 +26,11 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  String testJSON ="paths/output/Test.wpilib.json";
-  String test2JSON ="paths/output/Test2.wpilib.json";
-  public static Trajectory testTrajectory = new Trajectory();
-  public static Trajectory test2Trajectory = new Trajectory();
+  String bluePath1JSON ="paths/output/BluePath1.wpilib.json";
+  String bluePath2JSON ="paths/output/BluePath2.wpilib.json";
+  public static Trajectory bluePath1Trajectory = new Trajectory();
+  public static Trajectory bluePath2Trajectory = new Trajectory();
+  
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -42,20 +43,26 @@ public class Robot extends TimedRobot {
     
     // Importing Trajectories form the deployed directory to a variable to use and follow with
     // autonomous Commands
+
+   
     try {
-      Path testPath = Filesystem.getDeployDirectory().toPath().resolve(testJSON);
-      testTrajectory = TrajectoryUtil.fromPathweaverJson(testPath);
+      Path bluePath1 = Filesystem.getDeployDirectory().toPath().resolve(bluePath1JSON);
+      bluePath1Trajectory = TrajectoryUtil.fromPathweaverJson(bluePath1);
     } catch (IOException ex){
-      DriverStation.reportError("Unable to open Trajectory: " + testJSON, ex.getStackTrace());
+      DriverStation.reportError("Unable to open Trajectory: " + bluePath1JSON, ex.getStackTrace());
     }
 
 
-    try {
-      Path test2Path = Filesystem.getDeployDirectory().toPath().resolve(test2JSON);
-      test2Trajectory = TrajectoryUtil.fromPathweaverJson(test2Path);
+    
+  try {
+      Path test2Path = Filesystem.getDeployDirectory().toPath().resolve(bluePath2JSON);
+      bluePath2Trajectory = TrajectoryUtil.fromPathweaverJson(test2Path);
     } catch (IOException ex){
-      DriverStation.reportError("Unable to open Trajectory: " + test2JSON, ex.getStackTrace());
+      DriverStation.reportError("Unable to open Trajectory: " + bluePath2JSON, ex.getStackTrace());
     }
+
+
+    
     
     //Create Robot Container after importing all Trajectories so that they are populated when
     // importing into RobotContainer... If Created after RobotContainer you will pass in empty
@@ -78,7 +85,9 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("Total Current Draw",RobotContainer.pdh.getTotalCurrent());  
+    SmartDashboard.putNumber("Total Current Draw",RobotContainer.pdh.getTotalCurrent()); 
+    SmartDashboard.putData(CommandScheduler.getInstance());
+    SmartDashboard.putNumber("RobotVoltage", RobotContainer.pdh.getVoltage()); 
     
   }
 

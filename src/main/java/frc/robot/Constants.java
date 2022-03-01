@@ -4,8 +4,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -26,6 +28,7 @@ public final class Constants {
     public final class VisionConstnats{}
     public final class TurretConstants{}
     public final class XboxConstants{}
+    public final class AutoConstants{}
     */
     //Drive Base 
     
@@ -33,7 +36,7 @@ public final class Constants {
     public static final int left_motor_master_port = 4;
     public static final int right_motor_slave_port = 3;
     public static final int right_motor_master_port = 2;
-    public static final int pigeon_port=12;
+    public static final int pigeon_port = 12;
 
     //Shooter
     public static final int shooter_motor_master_port = 5;
@@ -41,24 +44,43 @@ public final class Constants {
     public static final int accelerator_wheel_motor_port = 7;
     public static final int shooter_solenoid_port = 0;
     public static final double shooter_target_RPMs = 2700;
+ 
+    public static final double ball_run_reverse_speed = -.25;
+    public static final int ball_run_motor_port = 10;
+    public static final int top_ball_sensor_port = 8;
+    public static final int bottom_ball_sensor_port = 6;
+    public static final double ball_run_speed = 1;
 
     //Climber
-   public static final int climber_motor_port = 10;
-    
+    public static final int climber_motor_port = 10;
+    public static final double climber_percent_output = 0;
+    public static final double climber_drum_circumference = Math.PI * 1.25;
+    public static final double climber_gearbox_ratio = 22.67;
+    public static final double climber_max_height = 23;
+    public static final double climber_min_hight = -1;
+    public static final double climber_motor_speed = 0;
+    public static final double climber_kF = .3;
+    public static final double climber_kP = 0;
+    public static final double climber_kI = 0;
+    public static final double climber_kD = 0;
+    public static final int climber_home_sensor_port = 5;
+    public static final double climber_down_full_speed = -1;
+    public static final double climber_down_slow_speed = -0.30;
+
     //Intake
     public static final int intake_motor_port = 8;
-    public static final int intake_solenoid_port = 0;
     public static final double intakeSpeed = 1;
+
 
     //Turret
     public static final int turret_motor_port = 9;
     public static final double turret_kP = 0.09;
+    public static final double turret_kD = 0;
+    public static final double turret_kI = 0;
     public static final double minimum_turn_command = 0.25;
-
-    //Hopper
-    public static final int hopper_motor_port = 13;
-    public static final int feed_wheel_motor_port = 10;
-
+    public static final double turret_gear_ratio = 0;
+    public static final double turret_rotation_speed = 0;
+    
     //SHOOTER PID Values
     public static final double shooter_kF = (.60 * 1023) /11238;
     public static final double shooter_kD = 0;
@@ -68,14 +90,19 @@ public final class Constants {
     public static final double shooter_Ramp_Time = 0.1;
     public static final int shooter_timeout_ms = 30;
     
+
     //Shooter Constants
     public static final double shooter_speed = .45;
+
 
     //Drivetrain
     public static final double deadBand = .1;
     public static final double manual_drive_speed = .1;
 
     public static final double Falcon_Ticks_Per_Rev = 2048;
+    public static final SupplyCurrentLimitConfiguration drive_motor_current_limit = new SupplyCurrentLimitConfiguration(true, 30, 30, .1);
+    public static final StatorCurrentLimitConfiguration drive_motor_stator_current_limit = new StatorCurrentLimitConfiguration(true , 30 , 40 , .5);
+
 
 //xbox controller buttons
 
@@ -103,14 +130,17 @@ public final class Constants {
     public static final int left_bumper = 5;
     public static final int right_bumper = 6;
 	
+
+
     //Pneumatics
-    public static final int pdh_port = 1;
+    public static final int pdh_port = 15;
     public static final int pneumatic_hub_port = 1;
     public static final int climber_solenoid_channel = 1;
     public static final int intake_solenoid_channel = 2;
     public static final int shooter_solenoid_channel = 3;
     public static final int hr_solenoid_channel = 4;
     
+
     //Auto
     public static final double ks_volts = 0.71537;
     public static final double kv_volts_seconds_per_meter = 2.4184;
@@ -130,6 +160,18 @@ public final class Constants {
     public static final double dt_wheel_dia_meters = .09906;
     public static final double dt_wheel_circumference_meters = dt_wheel_dia_meters * Math.PI;
     public static final double drivetrain_max_voltage = 9.5;
+    public static final double max_reverse_angle = 0;
+    public static final double max_forward_angle = 0;
+    public static final double turret_search_speed = 0;
+    
+    
+    
+    
+   
+    
+   
+   
+    
 
 
 

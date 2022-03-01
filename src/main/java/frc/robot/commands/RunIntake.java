@@ -4,22 +4,27 @@
 
 package frc.robot.commands;
 
+
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-//import frc.robot.Constants;
+import frc.robot.Constants;
+import frc.robot.subsystems.BallRun;
 import frc.robot.subsystems.Intake;
 
 public class RunIntake extends CommandBase {
 Intake intake;
-
+BallRun ballRun;
+Timer timer;
 
   /** Creates a new RunIntake. */
-  public RunIntake(Intake i) {
+  public RunIntake(Intake i, BallRun bR) {
   intake = i;
-  addRequirements(intake);
+  ballRun = bR;
+  timer = new Timer();
+  addRequirements(intake);  //declare subsystem dependencies.
   SmartDashboard.putBoolean("Intake Status", false); 
   
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -34,24 +39,49 @@ Intake intake;
   @Override
   public void execute() {
 
-    //intake.intakeSpeed(Constants.intakeSpeed);
-   // intake.extendIntake();
-
+    intake.intakeSpeed(Constants.intakeSpeed);
+    intake.extendIntake();
+    ballRun.ballrunPercentOutput(Constants.ball_run_speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
-    //intake.stop();
-    //intake.retractIntake();
+    
+    intake.retractIntake();
     SmartDashboard.putBoolean("Intake Status", false);
+    timer.reset();
+    timer.start();
+    while (timer.get() < .1){
+    ballRun.ballrunPercentOutput(Constants.ball_run_reverse_speed);
+    }
+    
+    intake.stop();
+    ballRun.stopBallrun();
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    //return false;
+    if (ballRun.getBallSensor(ballRun.topBallSensor) == false 
+        && ballRun.getBallSensor(ballRun.bottomBallSensor) == false)
+    {
+      
+      timer.reset();
+      timer.start();
+      while (timer.get() < .05){}
+
+      return true;
+
+    }
+
+    else {
+
+      return false;
+
+    }
+
   }
 }

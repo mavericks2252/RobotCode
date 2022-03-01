@@ -8,25 +8,26 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants;
+import frc.robot.subsystems.BallRun;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class FollowPathAndIntake extends ParallelDeadlineGroup {
-  /** Creates a new FollowPathAndIntake. */
-  public FollowPathAndIntake(Trajectory trajectory, DriveTrain driveTrain, Intake intake) {
-    // Add the deadline command in the super() call. Add other commands using
-    // addCommands().
+public class FollowPathAndIntake extends ParallelRaceGroup {
+  /** Creates a new RaceIntakeAndFollowPath. */
 
-   
-    super(new InstantCommand(), 
-    new RamseteCommand (
+  DriveTrain driveTrain;
+  public FollowPathAndIntake(Trajectory trajectory, DriveTrain driveTrain, Intake intake, BallRun ballRun) {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    this.driveTrain=driveTrain;
+
+    RamseteCommand ramseteCommand = new RamseteCommand (
       trajectory, // trajectory
       driveTrain::getPose2d, // Pose Supplier
       new RamseteController(Constants.k_ramesete_b,Constants.k_ramesete_zeta),// object does path following conputation and converts to chassis speed
@@ -39,10 +40,20 @@ public class FollowPathAndIntake extends ParallelDeadlineGroup {
       new PIDController(Constants.kp_drive_velocity,0, 0), // left side PID controller  
       new PIDController(Constants.kp_drive_velocity, 0, 0),// right side PID controller  
       driveTrain::tankDriveVolts,//passing output voltage to drivetrain  
-      driveTrain)
+      driveTrain);
 
-      );
-    // addCommands(new FooCommand(), new BarCommand());
-      addCommands(new RunIntake(intake));
+
+
+      driveTrain.resetOdemetry(trajectory.getInitialPose());
+
+    
+
+
+      
+  
+  
+  addCommands(
+    ramseteCommand, 
+    new RunIntake(intake, ballRun));
   }
 }
